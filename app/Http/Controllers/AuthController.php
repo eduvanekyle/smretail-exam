@@ -22,7 +22,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'User registered successfully',
-                'user' => $user->except('password'),
+                'user' => $user->except('password', 'id'),
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
             \Log::error('User registration failed: '.$e);
@@ -75,5 +75,25 @@ class AuthController extends Controller
             'message' => 'User profile retrieved successfully',
             'data' => new ProfileResource($user),
         ], Response::HTTP_OK);
+    }
+
+    public function logout()
+    {
+        try {
+            $user = auth()->user();
+
+            $user->tokens()->delete();
+
+            return response()->json([
+                'message' => 'Logout successful',
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            \Log::error('Logout failed: '.$e);
+
+            return response()->json([
+                'message' => 'Logout failed',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

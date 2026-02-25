@@ -12,4 +12,5 @@ Route::middleware('throttle:30,1')->prefix('auth')->group(function () {
 // Protected routes
 Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile'])->name('auth.profile');
+    Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
